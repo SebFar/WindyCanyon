@@ -118,8 +118,8 @@ def SARSAEV(x, y, q, epsilon, numberOfActions):
     "finds the EV for ESARSA of the next action"
     expectation = 0
     for i in range(0, numberOfActions):
-        expectation += ((epsilon / (1 + numberOfActions)) * q[y, x, i])
-    expectation += ((1 - (epsilon / (1 + numberOfActions))) * np.max(q[y, x, :]))
+        expectation += ((epsilon / numberOfActions) * q[y, x, i])
+    expectation += (1 - epsilon) * np.max(q[y, x, :])
     return expectation
 
 
@@ -165,17 +165,17 @@ def findPathName(numberOfActions, stochastic):
     workingLocation = os.path.dirname(__file__)
     if stochastic:
         if numberOfActions == 4:
-            file = os.path.join(workingLocation,"scores","scoreFourStoch.npy")
+            file = os.path.join(workingLocation,"scoresNewInitialization","scoreFourStoch.npy")
         elif numberOfActions == 8:
-            file = os.path.join(workingLocation,"scores","scoreEightStoch.npy")
+            file = os.path.join(workingLocation,"scoresNewInitialization","scoreEightStoch.npy")
         else:
             print("Stoch incorrect number of actions")
             return False
     else:
         if numberOfActions == 4:
-            file = os.path.join(workingLocation,"scores","scoreFourDeterm.npy")
+            file = os.path.join(workingLocation,"scoresNewInitialization","scoreFourDeterm.npy")
         elif numberOfActions == 8:
-            file = os.path.join(workingLocation,"scores","scoreEightDeterm.npy")
+            file = os.path.join(workingLocation,"scoresNewInitialization","scoreEightDeterm.npy")
         else:
             print("Determ incorrect number of actions")
             return False
@@ -233,7 +233,7 @@ def dataDisplay():
     graphDisplay(False, 4, 221, startGraphs, "4-action deterministic")
     graphDisplay(False, 8, 222, startGraphs, "8-action deterministic")
     graphDisplay(True, 4, 223, startGraphs, "4-action stochastic")
-    graphDisplay(True, 4, 224, startGraphs, "8-action stochastic")
+    graphDisplay(True, 8, 224, startGraphs, "8-action stochastic")
     plt.legend(loc='upper right')
     workingLocation = os.path.dirname(__file__)
     file = os.path.join(workingLocation,"outputDisplay.png")
@@ -245,8 +245,8 @@ def dataDisplay():
 for typeOfAlgorithm in range(1, 4):
     for stochastic in [True, False]:
         for numberOfActions in [4, 8]:
-            for i in range(0, 0):
-                q = np.zeros((7, 10, numberOfActions))
+            for i in range(0, 10):
+                q = np.ones((7, 10, numberOfActions)) * (-100)
                 scores = doARun(300, 1, q, numberOfActions, stochastic, typeOfAlgorithm)
                 dataSaver(scores, numberOfActions, stochastic, typeOfAlgorithm)
 
